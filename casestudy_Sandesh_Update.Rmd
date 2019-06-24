@@ -15,18 +15,25 @@ The intent of the following outputs is to provide information related to analysi
 - The markdown contains the ability for the user to set their working path to ensure data can be executed in a reproducible fashion. 
 - The markdown requires the user have the dplyr and ggplot2 libraries installed.
 
+###Initial Code Setup - The code chunk below is for setup of the environment and loading in the required data files
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r message=FALSE, warning=FALSE}
-#install necessary libraries
+#commented out code below provides the necessary code to install required packages is needed
+#install.packages("dplyr")
+#install.packages("ggplot2")
+
+#load necessary libraries
 library(dplyr)
 library(ggplot2)
 
-#Setup the environment for working
+#Setup the environment for working. Change the WorkingDirPath variable as needed to set the appropriate working directory
 #WorkingDirPath = "C:/Users/sojha.WVOFFICE.000/Documents/SMU/Summer 2019/Doing Data Science/CaseStudy1_2_2_2"
 WorkingDirPath = "C:\\Users\\croomb\\OneDrive - BAT\\Desktop\\Personal Training\\SMU\\DS 6306 - Doing Data Science\\DS6306-MinerLeague-CaseStudies\\CaseStudy1"
 setwd(WorkingDirPath)
+
+#Set variables for the file locations. Assumption here that the existing GitHub structure will be used.
 beerFile = ".\\Data\\Beers.csv"
 breweryFile = ".\\Data\\Breweries.csv"
 
@@ -35,40 +42,51 @@ beerDF = read.csv(beerFile)
 breweryDF = read.csv(breweryFile)
 ```
 
+***
+
 ####Question 1 : How many breweries are present in each state?
 ```{r, fig.width=10, fig.height=10,message=FALSE, warning=FALSE}
-#Counting the number of breweries by state
+#Counting the number of breweries by state. Requrn them in descending count order
 brewerysByState = breweryDF %>% count(State,sort=TRUE)
-names(brewerysByState) = c("State", "Count")
-print(brewerysByState,n=51)
 
+#Add human redable names to the brewerysByState dataframe
+names(brewerysByState) = c("State", "Count")
+
+#Print out the listing of breweries and counts. NOTE: since DC is in the list there are 51 total entries
+print(brewerysByState,n=51)
 
 #Ploting the number of breweries in each state to provide a visual output
 ggplot(data=brewerysByState, aes(x=reorder(State,Count), y=Count, fill=State)) + geom_bar(stat="identity", show.legend = FALSE) + labs(x ="State",y="Brewery Count",title="Number of Breweries by State") + theme(plot.title = element_text(size = 16,face= "bold",hjust = 0.5)) + theme(axis.text = element_text(size=8),axis.title=element_text(size=10))
 ```
-As shown in the table above there are brewweries located in all states, with Colorado having the most at 47. North Dakota, South Dakota, Washington, DC. and West Virginia have the least at 1. The graph provides additional visualization of the data.  
 
+#### As shown in the table above there are breweries located in all 50 states and Washington DC. Colorado (CO) has the most breweries with 47, while North Dakota (ND), South Dakota (SD), Washington, DC (DC) and West Virginia (WV) have the least number of breweries with 1. The graph provides an additional visualization of the data. 
 
+***
 
 ####Question 2 : Merge beer data with the breweries data.  Print the first 6 observations and the last six observations to check the merged file.
 ```{r message=FALSE, warning=FALSE}
 #Merging the beer and breweries data into a new data frame
 BeersAndBreweriesDF = merge(x=beerDF,y=breweryDF,by.x="Brewery_id",by.y="Brew_ID")
-head(BeersAndBreweriesDF,6)
-tail(BeersAndBreweriesDF,6)
 
 #Cleanup the names of the columns to make the data more understandable
 names(BeersAndBreweriesDF) = c("Brewery_id","Beer_Name","Beer_ID","ABV","IBU","Beer_Style","Beer_OZ","Brewery_Name","Brewery_City","Brewery_State")
+
+#Display the first 6 and last 6 entries to confirm merge was successful
+head(BeersAndBreweriesDF,6)
+tail(BeersAndBreweriesDF,6)
 ```
-As shown in the tables above we can confirm that the data has been merged successfully via looking at the first and last 6 records of the data set.
+#### As shown in the tables above we can confirm that the data has been merged successfully via looking at the first and last 6 records of the data set.
 
-
+***
 
 ####Question 3 : Report the number of NA's in each column.
 ```{r}
+#Sum the NAs in the datafram and display the total counts for all columnt
 sapply(BeersAndBreweriesDF, function(x) sum(is.na(x)))
 ```
-The table above shows the number of NAs (or missing values) in the data. In this instance there are 62 missing values in the ABV column and 1005 missing values in the IBU column.  
+#### The table above shows the number of NAs (or missing values) in the data. In this instance there are 62 missing values in the ABV column and 1005 missing values in the IBU column. 
+
+***
 
 
 ####Question 4 : Compute the median alcohol content and international bitterness unit for each state.  Plot a bar chart to compare.
@@ -81,7 +99,9 @@ IBUByState = BeersAndBreweriesDF %>% group_by(Brewery_State) %>% summarise(media
 names(ABVByState) = c("State","MedianABV")
 names(IBUByState) = c("State","MedianIBU")
 
-
+#Remove any extraneous NAs from the data
+ABVByState = na.omit(ABVByState)
+IBUByState = na.omit(IBUByState)
 
 #Bar charts for comparison
 #ABVByState
@@ -90,10 +110,10 @@ names(IBUByState) = c("State","MedianIBU")
 #IBUByState
   ggplot(data=IBUByState, aes(x=reorder(State,MedianIBU), y=MedianIBU, fill=State)) + geom_bar(stat="identity", show.legend = FALSE) + labs(x ="State",y="IBU",title="IBU by State") + theme(plot.title = element_text(size = 16,face= "bold",hjust = 0.5)) + theme(axis.text = element_text(size=8),axis.title=element_text(size=10))
 ```
-In reviewing at the ABV by State graph, above, it can be seen that the highest median ABV value is in Kentucky with the lowest ABV value un Utah. In reviewing the IBU by State graph, above, it can be seen that the lowest median ABV value is in Wisonsin and the highest in Maine.
-  
 
+#### The two graphs, ABV by State and IBU by State, depict the median alcohol content (ABV) and international bitterness unit (IBU) values for each state. It can be seen from the ABV by State graph that Kentucky (KY) has the highest median ABV while Utah (UT) has the lowest ABV. In reviewing the IBU graph, it can be seen that Maine (ME) has the highest median IBU value while Wisconsin (WI) has the lowest median IBU value.  
 
+***
 
 ####Question 5 : Which state has the maximum alcoholic(ABV) beer? Which state has the most bitter (IBU) beer ?
 
@@ -113,8 +133,9 @@ In reviewing at the ABV by State graph, above, it can be seen that the highest m
  maxIBUState = maxIBUStateDF$Brewery_State[1]
  as.character(maxIBUState)
 ```
-Based on the information provided above Colorado has the highest ABV of all states in the data set. Oregon has the most bitter beer (highest IBU) of all states in the data set.  
+#### Based on the information provided above Colorado (CO) has the highest ABV of all states in the data set. Oregon (OR) has the most bitter beer (highest IBU) of all states in the data set.  
 
+***
 
 
 ####Question 6 : Summary Statistics for the ABV variable.
@@ -122,8 +143,9 @@ Based on the information provided above Colorado has the highest ABV of all stat
  #summary statistics for the ABV variable
  summary(BeersAndBreweriesDF$ABV)
 ```
-Based on the table above we can see that teh mean ABV is 0.05977 with a minimum of 0.00100 and a maximum of 0.12800. There are 62 NAs in the data as well. 
+#### Based on the table above we can see that the mean ABV is 0.05977 with a minimum of 0.00100 and a maximum of 0.12800. There are 62 NAs in the data as well. 
   
+***
 
 ####Question 7 : Is there an apparent relationship between the bitterness of the beer and its alcholic content? Draw a scatter plot.
 
@@ -141,5 +163,5 @@ relationship
 
 cor.test(BeersAndBreweriesDF$ABV,BeersAndBreweriesDF$IBU)
 ```
-Based on the data above it can be determined that there is a relationship between the bitterness of the beer and its alcholic content. It can concludes that alcoholic content (ABV) and bitterness (IBU) are significantly correlated with a correlation coefficient of `0.67` and p-value of `2.2*10^{-16).
+#### Based on the data above it can be determined that there is a relationship between the bitterness of the beer and its alcholic content. It can concludes that alcoholic content (ABV) and bitterness (IBU) are significantly correlated with a correlation coefficient of `0.67` and p-value of `2.2*10^{-16).
 

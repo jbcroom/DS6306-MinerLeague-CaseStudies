@@ -52,7 +52,9 @@ the purpose of the study. This folder contains files.
   
  - `Beers and Breweries of America_MinerLeague_FINAL.Rmd` contains the analysis of the data files and answers to the questions listed in the questions section below. This file is in RMarkdown format.
  
- - `Beers_and_Breweries_of_America_MinerLeague_FINAL.html` contains the HTML output of the RMarkdown file
+ - `Beers_and_Breweries_of_America_MinerLeague_FINAL.html` contains the HTML output of the RMarkdown file.
+ 
+ - `Miner League Presentation.pptx` contains a PowerPoint presentation developed off of the analysis performed in `Beers and Breweries of America_MinerLeague_FINAL.Rmd`to allow for easily reporting on analysis.
 
 
 

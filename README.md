@@ -35,6 +35,7 @@ from 558 breweries in the United States.
 | State   |  The State where the brewery is located ```(Limited to the U.S.)``` |
 
 
+
 ### Folder & File Information
 
 - `CaseStudyInfo/` Contains all the background information important for understanding
@@ -48,7 +49,10 @@ the purpose of the study. This folder contains files.
   + `Beers.csv` contains list of 2,410 craft beers and their respective data points
   that is measured during the study.
   + `Breweries.csv` contains information about 558 breweries  within the United States.
-
+  
+ - `Beers and Breweries of America_MinerLeague_FINAL.Rmd` contains the analysis of the data files and answers to the questions listed in the questions section below. This file is in RMarkdown format.
+ 
+ - `Beers_and_Breweries_of_America_MinerLeague_FINAL.html` contains the HTML output of the RMarkdown file
 
 
 
@@ -68,6 +72,8 @@ the purpose of the study. This folder contains files.
 
 7.) Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.
 
+
+
 ### Researcher Information & Responsibilities
 
 | Researcher | Questions of Interest |
@@ -75,9 +81,3 @@ the purpose of the study. This folder contains files.
 |Brandon Croom|Data cleaning and Q1~Q7   |
 |Sandesh Ojha|Presentation perp, editing code |
 |Sangrae Cho|Readme, editing code|
-
-
-
-### Session Info for the CaseStudy1
-
-
